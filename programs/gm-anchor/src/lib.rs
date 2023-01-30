@@ -1,15 +1,31 @@
 use anchor_lang::prelude::*;
 
-declare_id!("Fg6PaFpoGXkYsidMpWTK6W2BeZ7FEfcYkg476zPFsLnS");
+declare_id!("6vMoWDyrNn8mswFWbgJxkDVgPKVcHZyLRSog1GKSB6i7");
 
 #[program]
 pub mod gm_anchor {
     use super::*;
 
-    pub fn initialize(ctx: Context<Initialize>) -> Result<()> {
+    pub fn execute(ctx: Context<Execute>, name: String) -> Result<()> {
+        let gm_account = &mut ctx.accounts.gm_account;
+        gm_account.name = name;
+        msg!("hello, {}", gm_account.name);
+
         Ok(())
     }
 }
 
+#[account]
+pub struct GreetingAccount {
+    pub name: String,
+}
+
 #[derive(Accounts)]
-pub struct Initialize {}
+pub struct Execute<'info> {
+    #[account(init, payer = user, space = 8 + 32)]
+    pub gm_account: Account<'info, GreetingAccount>,
+
+    #[account(mut)]
+    pub user: Signer<'info>,
+    pub system_program: Program<'info, System>,
+}
