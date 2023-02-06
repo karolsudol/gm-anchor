@@ -6,6 +6,8 @@
 
 `anchor build`
 
+`anchor test`
+
 `anchor build` with new app_id
 
 `solana config set --url http://127.0.0.1:8899`
